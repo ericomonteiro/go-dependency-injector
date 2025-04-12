@@ -17,7 +17,7 @@ func NewServiceA() *ServiceA {
 }
 
 func (d *ServiceA) Initialize(dm *dependencies.DependencyManager) error {
-	serviceB, err := dependencies.GetSingleton[*ServiceB](dm, ServiceBSingletonKey)
+	serviceB, err := dependencies.GetSingletonByKey[*ServiceB](dm, ServiceBSingletonKey)
 	if err != nil {
 		return nil
 	}

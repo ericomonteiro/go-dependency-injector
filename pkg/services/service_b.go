@@ -19,12 +19,12 @@ func NewServiceB() *ServiceB {
 }
 
 func (d *ServiceB) Initialize(dm *dependencies.DependencyManager) error {
-	database, err := dependencies.GetSingleton[*infra.Database](dm, infra.DataBaseSingletonKey)
+	database, err := dependencies.GetSingletonByKey[*infra.Database](dm, infra.DataBaseSingletonKey)
 	if err != nil {
 		return err
 	}
 
-	cache, err := dependencies.GetSingleton[*infra.Cache](dm, infra.CacheSingletonKey)
+	cache, err := dependencies.GetSingletonByKey[*infra.Cache](dm, infra.CacheSingletonKey)
 	if err != nil {
 		return err
 	}

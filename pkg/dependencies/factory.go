@@ -52,7 +52,20 @@ func (dm *DependencyManager) get(key any) (Singleton, error) {
 	return dep, nil
 }
 
-func GetSingleton[T any](dm *DependencyManager, key any) (T, error) {
+func GetSingletonByType[T any](dm *DependencyManager) T {
+	var nilReturn T
+
+	for _, singleton := range dm.singletons {
+		instance, ok := singleton.(T)
+		if ok {
+			return instance
+		}
+	}
+
+	return nilReturn
+}
+
+func GetSingletonByKey[T any](dm *DependencyManager, key any) (T, error) {
 	var nilReturn T
 
 	singleton, err := dm.get(key)

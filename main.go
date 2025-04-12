@@ -22,8 +22,12 @@ func main() {
 	}
 
 	// Now you can use the initialized services
-	serviceA, _ := dependencies.GetSingleton[*services.ServiceA](dm, services.ServiceASingletonKey)
-	serviceB, _ := dependencies.GetSingleton[*services.ServiceB](dm, services.ServiceBSingletonKey)
+
+	// You can get singleton by type
+	serviceA := dependencies.GetSingletonByType[*services.ServiceA](dm)
+
+	// You can get singleton by key (in case you have multiple implementations)
+	serviceB, _ := dependencies.GetSingletonByKey[*services.ServiceB](dm, services.ServiceBSingletonKey)
 
 	serviceA.Print()
 	serviceB.Print()
