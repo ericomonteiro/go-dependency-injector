@@ -5,7 +5,7 @@ import (
 )
 
 type ServiceA struct {
-	serviceB *ServiceB
+	ServiceB *ServiceB
 }
 
 type serviceASingletonKey struct{}
@@ -22,15 +22,15 @@ func (d *ServiceA) Initialize(dm *dependencies.DependencyManager) error {
 		return nil
 	}
 
-	d.serviceB = serviceB
+	d.ServiceB = serviceB
 	return nil
 }
 
 func (d *ServiceA) Print() {
 	println("Service A singleton")
 	println("    My address: ", d)
-	println("    Service B address: ", d.serviceB)
-	println("    Service B database: ", d.serviceB.Database)
-	println("    Service B cache: ", d.serviceB.Cache)
+	println("    Service B address: ", d.ServiceB)
+	println("    Service B database: ", d.ServiceB.Database)
+	println("    Service B cache: ", d.ServiceB.Cache)
 	return
 }
