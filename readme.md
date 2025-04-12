@@ -6,6 +6,12 @@ This project is a proposal to solve dependency injection in Go. It provides a si
 
 Dependency injection is a design pattern that allows you to decouple the creation of dependencies from their usage. In this project, we implement a lightweight dependency injection framework for Go, enabling you to register and initialize singletons and retrieve them when needed.
 
+### Dependency Registration Order
+
+The order in which dependencies are registered does not matter. This is because the `DependencyManager` first creates "empty" instances of each singleton without their dependencies being wired. Once all singletons are registered, the `InitializeAll` method is called to wire the dependencies and complete the initialization process.
+
+This approach ensures that each singleton instance is created and available before any dependencies are resolved, allowing for a flexible and decoupled registration process.
+
 ### Key Features
 
 - **Singleton Management**: Register and manage singleton instances.
