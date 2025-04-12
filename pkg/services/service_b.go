@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"go-dependency-injector/pkg/dependencies"
 	"go-dependency-injector/pkg/infra"
 )
@@ -36,9 +37,9 @@ func (d *ServiceB) Initialize(dm *dependencies.DependencyManager) error {
 }
 
 func (d *ServiceB) Print() {
-	println("Service B singleton")
-	println("    My address: ", d)
-	println("    Database address: ", d.Database)
-	println("    Cache address: ", d.Cache)
+	fmt.Println("Service B singleton")
+	fmt.Println("    My address: ", d)
+	fmt.Println("    Database address: ", d.Database)
+	fmt.Println("    Cache address: ", d.Cache)
 	return
 }

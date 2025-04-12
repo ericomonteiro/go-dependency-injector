@@ -3,6 +3,7 @@ package infra
 import (
 	"fmt"
 	"go-dependency-injector/pkg/dependencies"
+	"math/rand/v2"
 )
 
 type Cache struct {
@@ -14,7 +15,10 @@ type cacheSingletonKey struct{}
 var CacheSingletonKey = cacheSingletonKey{}
 
 func NewCache() *Cache {
-	return &Cache{}
+
+	return &Cache{
+		dummy: fmt.Sprint(rand.IntN(100)),
+	}
 }
 
 func (d *Cache) Initialize(_ *dependencies.DependencyManager) error {

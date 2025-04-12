@@ -106,6 +106,33 @@ func GetSingletonByType[T any](dm *DependencyManager) T {
 	return nilReturn
 }
 
+func (dm *DependencyManager) GenerateDependencyGraph() {
+	for _, singleton := range dm.singletons {
+		singletonValue := reflect.ValueOf(singleton)
+		if singletonValue.Kind() == reflect.Ptr {
+			singletonValue = singletonValue.Elem()
+		}
+
+		// Get the type of the object
+		objType := reflect.TypeOf(singleton)
+
+		// Check if the object is a pointer and get the underlying type
+		if objType.Kind() == reflect.Ptr {
+			objType = objType.Elem()
+		}
+
+		fmt.Printf("Dependency graph for %s:\n", objType.String())
+		for i := 0; i < objType.NumField(); i++ {
+			field := objType.Field(i)
+			if field.Type.Kind() != reflect.Ptr {
+				continue
+			}
+
+			fmt.Printf("  - %s\n", field.Type.String())
+		}
+	}
+}
+
 func (dm *DependencyManager) GetSingletonByType(depType reflect.Type) any {
 	return dm.types[depType.String()]
 }
