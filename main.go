@@ -27,19 +27,21 @@ func main() {
 	fmt.Println("")
 
 	// Now you can use the initialized services
-	// You can get singleton by type
-	serviceA, err := dependencies.GetSingletonByKey[*services.ServiceA](dm, "ServiceAKey")
+	// You can get singleton by key
+	serviceA, err := dependencies.GetSingletonByKey[*services.ServiceA](dm, services.ServiceASingletonKey)
 	if err != nil {
 		panic(err)
 	}
 
-	// You can get singleton by key (in case you have multiple implementations)
-	serviceB, err := dependencies.GetSingletonByKey[*services.ServiceB](dm, "ServiceBKey")
+	serviceB, err := dependencies.GetSingletonByKey[*services.ServiceB](dm, services.ServiceBSingletonKey)
 	if err != nil {
 		panic(err)
 	}
 
 	serviceA.Print()
 	serviceB.Print()
+
+	// You can also use the interface
+	serviceA.ServiceB.PrintServiceB()
 
 }

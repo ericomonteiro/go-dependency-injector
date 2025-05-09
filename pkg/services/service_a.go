@@ -4,10 +4,10 @@ import (
 	"fmt"
 )
 
-const ServiceASingletonKey = "ServiceAKey"
+const ServiceASingletonKey = "ServiceASingletonKey"
 
 type ServiceA struct {
-	ServiceB *ServiceB `inject:"ServiceBKey"`
+	ServiceB IAmServiceB `inject:"ServiceBSingletonKey"`
 }
 
 func (d *ServiceA) Key() string {
@@ -19,10 +19,12 @@ func NewServiceA() *ServiceA {
 }
 
 func (d *ServiceA) Print() {
+	serviceB, _ := d.ServiceB.(*ServiceB)
+
 	fmt.Println("Service A singleton")
 	fmt.Println("    My address: ", d)
 	fmt.Println("    Service B address: ", d.ServiceB)
-	fmt.Println("    Service B database: ", d.ServiceB.Database)
-	fmt.Println("    Service B cache: ", d.ServiceB.Cache)
+	fmt.Println("    Service B database: ", serviceB.Database)
+	fmt.Println("    Service B cache: ", serviceB.Cache)
 	return
 }

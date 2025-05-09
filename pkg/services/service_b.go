@@ -5,21 +5,27 @@ import (
 	"go-dependency-injector/pkg/infra"
 )
 
+type IAmServiceB interface {
+	PrintServiceB()
+}
+
+const ServiceBSingletonKey = "ServiceBSingletonKey"
+
 type ServiceB struct {
 	Database *infra.Database `inject:"DataBaseSingletonKey"`
 	Cache    *infra.Cache    `inject:"CacheSingletonKey"`
 }
 
 func (d *ServiceB) Key() string {
-	return "ServiceBKey"
+	return ServiceBSingletonKey
 }
-
-type serviceBSingletonKey struct{}
-
-var ServiceBSingletonKey = serviceBSingletonKey{}
 
 func NewServiceB() *ServiceB {
 	return &ServiceB{}
+}
+
+func (d *ServiceB) PrintServiceB() {
+	fmt.Println("I am a service B")
 }
 
 func (d *ServiceB) Print() {
