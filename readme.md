@@ -35,6 +35,15 @@ func NewCache() *Cache {
     return &Cache{}
 }
 ```
+ 
+Note: You must use the `Key` method to define a unique key for each singleton. This key is used for dependency injection.
+Using the `inject` tag.
+```go
+type ServiceB struct {
+    Database *infra.Database `inject:"DataBaseSingletonKey"`
+    Cache    *infra.Cache    `inject:"CacheSingletonKey"`
+}
+```
 
 ### 2. Register Your Dependencies
 ```go
@@ -60,6 +69,27 @@ You can generate a dependency graph to visualize the relationships between your 
 
 ```go
 dm.GenerateDependencyGraph()
+```
+
+Result with this example:
+```
+Dependency graph for infra.Cache:
+Dependency graph for services.ServiceB:
+  - *infra.Database
+  - *infra.Cache
+Dependency graph for services.ServiceA:
+  - *services.ServiceB
+Dependency graph for infra.Database:
+
+Service A singleton
+    My address:  &{0x14000010070}
+    Service B address:  &{0x1400000e0b8 0x14000010060}
+    Service B database:  &{0.6024735673187461}
+    Service B cache:  &{19}
+Service B singleton
+    My address:  &{0x1400000e0b8 0x14000010060}
+    Database address:  &{0.6024735673187461}
+    Cache address:  &{19}
 ```
 
 ### Example project strucre
