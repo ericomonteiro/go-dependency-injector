@@ -12,18 +12,13 @@ func main() {
 	dm := dependencies.NewDependencyManager()
 
 	// Register dependencies
-	dm.Register(infra.CacheSingletonKey, infra.NewCache())
-	dm.Register(services.ServiceBSingletonKey, services.NewServiceB())
-	dm.Register(services.ServiceASingletonKey, services.NewServiceA())
-	dm.Register(infra.DataBaseSingletonKey, infra.NewDatabase())
-
-	// Wire dependencies by initialize method of each singleton
-	//if err := dm.InitializeAll(); err != nil {
-	//	panic(err)
-	//}
+	dm.Register(infra.NewCache())
+	dm.Register(services.NewServiceB())
+	dm.Register(services.NewServiceA())
+	dm.Register(infra.NewDatabase())
 
 	// Auto-wire dependencies using types (does not support multiple implementations of the same type)
-	err := dm.AutoWire()
+	err := dm.Autowire()
 	if err != nil {
 		panic(err)
 	}
@@ -33,10 +28,16 @@ func main() {
 
 	// Now you can use the initialized services
 	// You can get singleton by type
-	serviceA := dependencies.GetSingletonByType[*services.ServiceA](dm)
+	serviceA, err := dependencies.GetSingletonByKey[*services.ServiceA](dm, "ServiceAKey")
+	if err != nil {
+		panic(err)
+	}
 
 	// You can get singleton by key (in case you have multiple implementations)
-	serviceB, _ := dependencies.GetSingletonByKey[*services.ServiceB](dm, services.ServiceBSingletonKey)
+	serviceB, err := dependencies.GetSingletonByKey[*services.ServiceB](dm, "ServiceBKey")
+	if err != nil {
+		panic(err)
+	}
 
 	serviceA.Print()
 	serviceB.Print()

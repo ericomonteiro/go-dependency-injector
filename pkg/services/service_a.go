@@ -2,29 +2,20 @@ package services
 
 import (
 	"fmt"
-	"go-dependency-injector/pkg/dependencies"
 )
 
+const ServiceASingletonKey = "ServiceAKey"
+
 type ServiceA struct {
-	ServiceB *ServiceB
+	ServiceB *ServiceB `inject:"ServiceBKey"`
 }
 
-type serviceASingletonKey struct{}
-
-var ServiceASingletonKey = serviceASingletonKey{}
+func (d *ServiceA) Key() string {
+	return ServiceASingletonKey
+}
 
 func NewServiceA() *ServiceA {
 	return &ServiceA{}
-}
-
-func (d *ServiceA) Initialize(dm *dependencies.DependencyManager) error {
-	serviceB, err := dependencies.GetSingletonByKey[*ServiceB](dm, ServiceBSingletonKey)
-	if err != nil {
-		return nil
-	}
-
-	d.ServiceB = serviceB
-	return nil
 }
 
 func (d *ServiceA) Print() {

@@ -2,26 +2,23 @@ package infra
 
 import (
 	"fmt"
-	"go-dependency-injector/pkg/dependencies"
 	"math/rand/v2"
 )
+
+const DataBaseSingletonKey = "DataBaseSingletonKey"
 
 type Database struct {
 	dummy float64
 }
 
-type dataBaseSingletonKey struct{}
-
-var DataBaseSingletonKey = dataBaseSingletonKey{}
+func (d *Database) Key() string {
+	return DataBaseSingletonKey
+}
 
 func NewDatabase() *Database {
 	return &Database{
 		dummy: rand.Float64(),
 	}
-}
-
-func (d *Database) Initialize(_ *dependencies.DependencyManager) error {
-	return nil
 }
 
 func (d *Database) Print() {
