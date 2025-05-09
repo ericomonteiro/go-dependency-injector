@@ -8,25 +8,13 @@ Dependency injection is a design pattern that allows you to decouple the creatio
 
 ### Dependency Registration Order
 
-The order in which dependencies are registered does not matter. This is because the `DependencyManager` first creates "empty" instances of each singleton without their dependencies being wired. Once all singletons are registered, the `InitializeAll` method is called to wire the dependencies and complete the initialization process.
-
-This approach ensures that each singleton instance is created and available before any dependencies are resolved, allowing for a flexible and decoupled registration process.
+The order in which dependencies are registered does not matter. The `DependencyManager` creates "empty" instances of each singleton before resolving dependencies. After registration, the `Autowire` method is called to wire dependencies and complete the initialization process.
 
 ### Key Features
 
 - **Singleton Management**: Register and manage singleton instances.
-- **Initialization**: Automatically initialize all registered dependencies.
-- **Type-Safe Retrieval**: Retrieve dependencies with type safety using generics.
-
-## Approach
-
-The project uses a `DependencyManager` to handle the lifecycle of dependencies. Each dependency implements the `Singleton` interface, which requires an `Initialize` method. Dependencies are registered with unique keys, and the `DependencyManager` ensures they are initialized and accessible throughout the application.
-
-### Core Components
-
-1. **`DependencyManager`**: Manages the registration, initialization, and retrieval of dependencies.
-2. **`Singleton` Interface**: Defines the contract for dependencies that require initialization.
-3. **Type-Safe Retrieval**: Uses Go generics to safely retrieve dependencies by their type.
+- **Auto-Wire**: Automatically wire dependencies using struct tags.
+- **Type-Safe Retrieval**: Retrieve dependencies safely using generics.
 
 ## How to Use
 
@@ -39,49 +27,42 @@ type Cache struct {
     dummy string
 }
 
-func (c *Cache) Initialize(_ *dependencies.DependencyManager) error {
-    // Initialization logic
-    return nil
+func (c *Cache) Key() string {
+    return "CacheSingletonKey"
+}
+
+func NewCache() *Cache {
+    return &Cache{}
 }
 ```
 
-### 2. Register Dependencies
-
-In your `main.go`, register all dependencies with the `DependencyManager`:
-
+### 2. Register Your Dependencies
 ```go
 dm := dependencies.NewDependencyManager()
 
-dm.Register(infra.CacheSingletonKey, infra.NewCache())
-dm.Register(infra.DataBaseSingletonKey, infra.NewDatabase())
-dm.Register(services.ServiceASingletonKey, services.NewServiceA())
-dm.Register(services.ServiceBSingletonKey, services.NewServiceB())
+dm.Register(infra.NewCache())
+dm.Register(infra.NewDatabase())
+dm.Register(services.NewServiceA())
+dm.Register(services.NewServiceB())
 ```
 
-### 3. Initialize All Dependencies
+### 3. Auto-Wire Dependencies
 
-Call `InitializeAll` to initialize all registered dependencies:
-
+Call `Autowire` to automatically wire all registered dependencies:
 ```go
-if err := dm.InitializeAll(); err != nil {
+if err := dm.Autowire(); err != nil {
     panic(err)
 }
 ```
 
-### 4. Retrieve Dependencies
-
-Use the `GetSingleton` function to retrieve dependencies safely:
+### 5. Generate Dependency Graph (Optional)
+You can generate a dependency graph to visualize the relationships between your singletons:
 
 ```go
-serviceA, _ := dependencies.GetSingleton[*services.ServiceA](dm, services.ServiceASingletonKey)
-serviceB, _ := dependencies.GetSingleton[*services.ServiceB](dm, services.ServiceBSingletonKey)
-
-serviceA.Print()
-serviceB.Print()
+dm.GenerateDependencyGraph()
 ```
 
-## Example Project Structure
-
+### Example project strucre
 ```
 go-dependency-injector/
 ├── main.go
@@ -96,18 +77,10 @@ go-dependency-injector/
 │       └── service_b.go
 ```
 
-## Running the Project
+### 6. Run the Application
 
-1. Clone the repository.
-2. Run `go mod tidy` to install dependencies.
-3. Execute the application:
+Finally, run your application:
 
-```bash
+```go
 go run main.go
 ```
-
-## Conclusion
-
-This project demonstrates a simple and effective way to implement dependency injection in Go. By using a `DependencyManager`, you can manage the lifecycle of your dependencies, ensuring they are initialized and accessible in a type-safe manner.
-
-Feel free to extend this framework to suit your application's needs!
