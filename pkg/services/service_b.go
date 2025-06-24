@@ -7,6 +7,7 @@ import (
 
 type IAmServiceB interface {
 	PrintServiceB()
+	Key() string
 }
 
 const ServiceBSingletonKey = "ServiceBSingletonKey"
@@ -20,7 +21,7 @@ func (d *ServiceB) Key() string {
 	return ServiceBSingletonKey
 }
 
-func NewServiceB() *ServiceB {
+func NewServiceB() IAmServiceB {
 	return &ServiceB{}
 }
 

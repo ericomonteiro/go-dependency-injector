@@ -38,12 +38,28 @@ func NewCache() *Cache {
  
 Note: You must use the `Key` method to define a unique key for each singleton. This key is used for dependency injection.
 Using the `inject` tag.
+
+You can use either explicit key-based injection or automatic type-based injection:
+
+1. **Explicit Key-based Injection**
 ```go
 type ServiceB struct {
     Database *infra.Database `inject:"DataBaseSingletonKey"`
     Cache    *infra.Cache    `inject:"CacheSingletonKey"`
 }
 ```
+
+2. **Automatic Type-based Injection**
+```go
+type ServiceB struct {
+    Database *infra.Database `inject:"auto"`
+    Cache    *infra.Cache    `inject:"auto"`
+}
+```
+
+When using `inject="auto"`, the dependency manager will automatically resolve the dependency based on its type. This makes your code more maintainable and reduces the chance of errors from mismatched keys.
+
+**Note**: When using interfaces with multiple implementations, you must use explicit key-based injection to avoid ambiguity. The dependency manager cannot automatically resolve which implementation to use when multiple options are available.
 
 ### 2. Register Your Dependencies
 ```go
@@ -92,7 +108,7 @@ Service B singleton
     Cache address:  &{19}
 ```
 
-### Example project strucre
+### Example project structure
 ```
 go-dependency-injector/
 ├── main.go

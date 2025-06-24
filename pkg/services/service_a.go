@@ -7,7 +7,7 @@ import (
 const ServiceASingletonKey = "ServiceASingletonKey"
 
 type ServiceA struct {
-	ServiceB IAmServiceB `inject:"ServiceBSingletonKey"`
+	ServiceB IAmServiceB `inject:"auto"`
 }
 
 func (d *ServiceA) Key() string {
