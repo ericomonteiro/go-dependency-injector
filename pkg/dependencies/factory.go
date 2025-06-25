@@ -139,30 +139,3 @@ func GetSingletonByKey[T any](dm *DependencyManager, key string) (T, error) {
 
 	return instance, nil
 }
-
-func GetSingletonByType[T any](dm *DependencyManager, typ string) (T, error) {
-	var nilReturn T
-	objString := getStringType(new(T))
-
-	singleton, isOk := dm.singletonsByType[objString]
-	if !isOk {
-		return nilReturn, errDependencyNotFound
-	}
-
-	instance, ok := singleton.(T)
-	if !ok {
-		return nilReturn, errDependencyTypeNotMatch
-	}
-
-	return instance, nil
-}
-
-func getStringType(obj any) string {
-	objType := reflect.TypeOf(obj)
-	// Check if the object is a pointer and get the underlying type
-	if objType.Kind() == reflect.Ptr {
-		objType = objType.Elem()
-	}
-
-	return objType.String()
-}
